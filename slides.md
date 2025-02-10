@@ -1,6 +1,5 @@
 ---
 theme: bricks
-# background: https://cover.sli.devs
 title: Angular 什麼時候會刷新畫面
 layout: intro
 mdc: true

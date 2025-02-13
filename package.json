@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "slidev build",
+    "buildWithAction": "slidev build  --base ./", 
     "dev": "slidev",
     "export": "slidev export --format pptx"
   },

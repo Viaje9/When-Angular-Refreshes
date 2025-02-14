@@ -251,7 +251,7 @@ Zone.js 的作用，就像是一位默默守護的間諜，它無聲無息地監
 
 5.  **`@defer` 區塊的狀態變化：** 當 Angular 17 版本引入的 `@defer` 延遲載入區塊的狀態發生變化時 (例如從 `placeholder` 狀態切換到 `complete` 狀態)，Angular 也會觸發相關元件的 Dirty 標記。
 
-值得注意的是，當一個元件被標記為 "dirty" 時，這個標記會**向上冒泡 (Bubble Up)**。也就是說，如果一個子元件被標記為 Dirty，那麼它的父元件也會被自動標記為 Dirty，並且這個冒泡過程會一直向上傳遞到根元件。實現這個冒泡行為的內部方法是 [`markViewDirty()`](https://github.com/angular/angular/blob/1ebf7bfb23529b06379dbd2fcd2a624ba63760fb/packages/core/src/render3/instructions/mark_view_dirty.ts#L26)(註：不同版本實作位置可能不同，此版本為 19.1.6)。
+值得注意的是，當一個元件被標記為 "dirty" 時，這個標記會**向上冒泡 (Bubble Up)**。也就是說，如果一個子元件被標記為 Dirty，那麼它的父元件也會被自動標記為 Dirty，並且這個冒泡過程會一直向上傳遞到根元件。實現這個冒泡行為的內部方法是 [`markViewDirty()`](https://github.com/angular/angular/blob/19.1.6/packages/core/src/render3/instructions/mark_view_dirty.ts#L26)(註：不同版本實作位置可能不同，此版本為 19.1.6)。
 
 ## `ChangeDetectorRef` 的角色：手動控制變更偵測的利器
 

@@ -34,25 +34,25 @@ export class UpdateValueComponent {
 ```html
 <!-- Vue2 -->
 <template>
-	<div>
-		<button @click="updateValue">點擊我更新</button>
-		<p>當前值：{{ value }}</p>
-	</div>
+  <div>
+    <button @click="updateValue">點擊我更新</button>
+    <p>當前值：{{ value }}</p>
+  </div>
 </template>
 
 <script>
 export default {
-	name: 'UpdateValueComponent',
-	data() {
-		return {
-			value: 0
-		};
-	},
-	methods: {
-		updateValue() {
-			this.value += 1;
-		}
-	}
+  name: 'UpdateValueComponent',
+  data() {
+    return {
+      value: 0
+    };
+  },
+  methods: {
+    updateValue() {
+      this.value += 1;
+    }
+  }
 };
 </script>
 ```
@@ -101,12 +101,12 @@ export default UpdateValueComponent;
 
 觀察這些範例程式碼，你會發現一個有趣的現象：Angular 在更新變數 `value` 時，使用的是最直接的方式 `this.value += 1`。相較之下，Vue 3 和 React 都需要透過特定的 API (`ref.value += 1` 或 `setValue(value + 1)`) 來觸發更新。Vue 2 雖然也看似直接修改 `this.value`，但實際上 Vue 內部透過 `Object.defineProperty` 對 `data` 中的屬性進行了包裝，使其具備了響應式能力。
 
-| 框架    | 變數宣告方式     | 更新變數方式                         |
-| :------ | :--------------- | :----------------------------------- |
-| Angular | Class Property   | 直接修改 `this.property`              |
-| Vue 2   | `data()` 返回物件 | 直接修改 `this.property`              |
-| Vue 3   | `ref` 或 `reactive` | `ref.value` 或直接修改              |
-| React   | `useState`       | `setValue`                           |
+| 框架    | 變數宣告方式        | 更新變數方式             |
+| :------ | :------------------ | :----------------------- |
+| Angular | Class Property      | 直接修改 `this.property` |
+| Vue 2   | `data()` 返回物件   | 直接修改 `this.property` |
+| Vue 3   | `ref` 或 `reactive` | `ref.value` 或直接修改   |
+| React   | `useState`          | `setValue`               |
 
 這種「直接」的方式，不禁讓人好奇：Angular 究竟是如何感知到變數的變化的？難道它真的擁有魔法，能夠自動追蹤所有變數的修改嗎？
 

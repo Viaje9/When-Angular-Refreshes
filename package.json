@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "slidev build",
-    "buildWithAction": "slidev build  --base ./", 
+    "buildWithAction": "slidev build  --base /When-Angular-Refreshes/", 
     "dev": "slidev",
     "export": "slidev export --format pptx"
   },

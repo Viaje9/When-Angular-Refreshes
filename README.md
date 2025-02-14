@@ -408,7 +408,26 @@ Angular Signals 的出現，正是 Angular 團隊在變更檢測機制上的一�
 
 如果你想體驗 Zoneless Angular 的魅力，可以在 Standalone 應用程式中啟用 `provideExperimentalZonelessChangeDetection()` 特性：
 
-**(程式碼範例部分，與初稿相同，請參考初稿內容)**
+```ts
+import { ApplicationConfig, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { bootstrapApplication } from "@angular/platform-browser";
+import { AppComponent } from "./app.component";
+
+export const appConfig: ApplicationConfig = {
+	providers: [
+		provideExperimentalZonelessChangeDetection(), // 新增 Zoneless provider
+	]
+};
+
+bootstrapApplication(AppComponent, appConfig)
+	.catch((err) => console.error(err));
+
+// 從 angular.json 中移除以下內容：
+//
+// "polyfills": [
+//   "zone.js"
+// ],
+```
 
 只需要在 `ApplicationConfig` 的 `providers` 中加入 `provideExperimentalZonelessChangeDetection()`，並從 `angular.json` 中移除 `zone.js` 的 polyfills，你的 Angular 應用程式就能在 Zoneless 模式下運行了。
 

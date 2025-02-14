@@ -15,18 +15,18 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'app-root',
-	template: `
-		<button (click)="updateValue()">點擊我更新</button>
-		<p>當前值：{{ value }}</p>
-	`,
+  selector: 'app-root',
+  template: `
+    <button (click)="updateValue()">點擊我更新</button>
+    <p>當前值：{{ value }}</p>
+  `,
 })
 export class UpdateValueComponent {
-	value = 0;
+  value = 0;
 
-	updateValue() {
-		this.value += 1;
-	}
+  updateValue() {
+    this.value += 1;
+  }
 }
 ```
 
@@ -60,10 +60,10 @@ export default {
 ```html
 <!-- Vue3 -->
 <template>
-	<div>
-		<button @click="updateValue">點擊我更新</button>
-		<p>當前值：{{ value }}</p>
-	</div>
+  <div>
+    <button @click="updateValue">點擊我更新</button>
+    <p>當前值：{{ value }}</p>
+  </div>
 </template>
 
 <script setup>
@@ -72,7 +72,7 @@ import { ref } from 'vue';
 const value = ref(0);
 
 function updateValue() {
-	value.value += 1;
+  value.value += 1;
 }
 </script>
 ```
@@ -82,18 +82,18 @@ function updateValue() {
 import React, { useState } from 'react';
 
 function UpdateValueComponent() {
-	const [value, setValue] = useState(0);
+  const [value, setValue] = useState(0);
 
-	const updateValue = () => {
-		setValue(value + 1);
-	};
+  const updateValue = () => {
+    setValue(value + 1);
+  };
 
-	return (
-		<div>
-			<button onClick={updateValue}>點擊我更新</button>
-			<p>當前值：{value}</p>
-		</div>
-	);
+  return (
+    <div>
+      <button onClick={updateValue}>點擊我更新</button>
+      <p>當前值：{value}</p>
+    </div>
+  );
 }
 
 export default UpdateValueComponent;
@@ -118,21 +118,21 @@ export default UpdateValueComponent;
 
 ```ts
 @Component({
-	selector: 'app-root',
-	standalone: true,
-	template: `
-		<button (click)="updateValue()">點擊我更新</button>
-		<p>當前值：{{ value }}</p>
-	`,
+  selector: 'app-root',
+  standalone: true,
+  template: `
+    <button (click)="updateValue()">點擊我更新</button>
+    <p>當前值：{{ value }}</p>
+  `,
 })
 export class UpdateValueComponent {
-	value = 0;
+  value = 0;
 
-	updateValue() {
-		setInterval(() => {
-			this.value += 1;
-		}, 1000)
-	}
+  updateValue() {
+    setInterval(() => {
+      this.value += 1;
+    }, 1000)
+  }
 }
 ```
 
@@ -283,15 +283,15 @@ NgZone 正是利用了 `onMicrotaskEmpty` 事件，來**判斷何時觸發 Angul
 
 ```ts
 export class ApplicationRef {
-	constructor() {
-		this._onMicrotaskEmptySubscription = this._zone.onMicrotaskEmpty.subscribe({
-			next: () => {
-				this._zone.run(() => {
-					this.tick();
-				});
-			},
-		});
-	}
+  constructor() {
+    this._onMicrotaskEmptySubscription = this._zone.onMicrotaskEmpty.subscribe({
+      next: () => {
+        this._zone.run(() => {
+          this.tick();
+        });
+      },
+    });
+  }
 }
 ```
 
@@ -306,19 +306,19 @@ export class ApplicationRef {
 
 ```ts
 export class ApplicationRef {
-	tick(): void {
-		try {
-			this._runningTick = true;
-			for (let view of this._views) {
-				view.detectChanges();
-			}
-			if (typeof ngDevMode === 'undefined' || ngDevMode) {
-				for (let view of this._views) {
-					view.checkNoChanges();
-				}
-			}
-		} catch (e) { ... } finally { ... }
-	}
+  tick(): void {
+    try {
+      this._runningTick = true;
+      for (let view of this._views) {
+        view.detectChanges();
+      }
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        for (let view of this._views) {
+          view.checkNoChanges();
+        }
+      }
+    } catch (e) { ... } finally { ... }
+  }
 }
 ```
 
@@ -414,13 +414,13 @@ import { bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app.component";
 
 export const appConfig: ApplicationConfig = {
-	providers: [
-		provideExperimentalZonelessChangeDetection(), // 新增 Zoneless provider
-	]
+  providers: [
+    provideExperimentalZonelessChangeDetection(), // 新增 Zoneless provider
+  ]
 };
 
 bootstrapApplication(AppComponent, appConfig)
-	.catch((err) => console.error(err));
+  .catch((err) => console.error(err));
 
 // 從 angular.json 中移除以下內容：
 //

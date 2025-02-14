@@ -166,8 +166,8 @@ Zone.js 的作用，就像是一位默默守護的間諜，它無聲無息地監
 
 為了更形象地理解 Angular 在 Default 策略下的變更偵測流程，讓我們借助一張 GIF 動畫來進行解析：
 
+### (CD01.gif)
 ![](/public/img/CD01.gif)
-<p style="text-align: center;">(CD01.gif)</p>
 
 這張動畫生動地展示了當使用者在 Angular 應用程式中觸發點擊事件後，畫面更新的完整過程。讓我們逐一拆解動畫中的關鍵元素：
 

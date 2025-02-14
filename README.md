@@ -136,7 +136,7 @@ export class UpdateValueComponent {
 }
 ```
 
-在這個例子中，變數的更新並不是由 `(click)` 事件直接觸發的，而是由 `setInterval` 定時 callback 觸發的。如果 Angular 的變更偵測僅僅依賴於事件驅動，那麼它如何知道 `setInterval` 的 callback 何時執行，並在適當的時機觸發變更偵測呢？
+在這個例子中，變數的更新並不是由 `(click)` 事件直接觸發的，而是由 `setInterval` 定時呼叫 callback 觸發的。如果 Angular 的變更偵測僅僅依賴於事件驅動，那麼它如何知道 `setInterval` 的 callback 何時執行，並在適當的時機觸發變更偵測呢？
 
 這個問題引導我們走向 Angular 變更偵測機制的核心 – Zone.js。
 
@@ -200,7 +200,7 @@ Zone.js 的作用，就像是一位默默守護的間諜，它無聲無息地監
 
 *   **如果我在程式碼中使用了 `setInterval`，是否會一直觸發 Change Detection？**
 
-    是的，如果你在 Angular 元件中使用了 `setInterval`，並且在 `setInterval` 的回調函數中修改了元件的數據，那麼 `setInterval` 就會**持續不斷地觸發 Change Detection**。這是因為 `setInterval` 是一種非同步操作，每次 `setInterval` 的回調函數執行時，Zone.js 都會捕獲到這個事件，並通知 Angular 觸發變更檢測。
+    是的，使用 `setInterval` **確實會持續觸發 Change Detection**。 即使你在 `setInterval` 的回調函數中**沒有修改元件的變數**，`setInterval` **仍然會持續觸發 Change Detection**。 這是因為 `setInterval` 是一種非同步操作，每次 `setInterval` 的callback 執行時，Zone.js 都會捕獲到這個事件，並通知 Angular 觸發變更檢測。
 
     這種行為在某些場景下可能是預期的，但在許多情況下，過於頻繁的變更檢測會導致效能問題。為了避免 `setInterval` 過度觸發變更檢測，你可以考慮使用以下方法：
 
@@ -209,15 +209,17 @@ Zone.js 的作用，就像是一位默默守護的間諜，它無聲無息地監
 
 *   **為什麼 Change Detection 要檢查整個元件樹，而不能只檢查點擊事件觸發的元件？**
 
-    Default 策略下的變更檢測之所以需要檢查整個元件樹，主要是因為 Angular 的變更偵測機制是**基於數據變更**的，而不是基於事件觸發的元件。在許多情況下，數據的變更可能並不是由用戶的直接點擊事件觸發的，例如：
+    即使事件 (例如點擊) 發生在特定元件上，但數據變更的影響可能是 **跨元件的**。  例如，當父元件透過 `@Input` 傳遞物件給子元件時，父元件修改物件的 property，即使 `@Input` 的物件參考沒有改變，子元件的視圖也可能需要更新。  這種跨元件的數據依賴性意味著，數據的變更可能發生在元件樹的不同位置，並影響到其他元件。
+
+    除了使用者直接觸發的事件 (如點擊) 外，還有許多場景會導致數據更新，但這些更新並非由特定元件的直接操作觸發，例如：
 
     *   來自後端服務器的數據更新 (透過 `HttpClient` 或 WebSocket 等 API 獲取)
     *   定時器觸發的數據更新 (`setInterval`, `setTimeout`)
     *   其他元件或服務觸發的數據更新
 
-    在這些非直接事件觸發的場景下，Angular 無法預先判斷是哪個元件的數據發生了變化，因此只能透過檢查整個元件樹，確保所有數據變化都能被檢測到，並更新到畫面。
+    在這些非直接事件觸發的場景下，**Angular 無法預先精確地判斷 *哪個* 元件的數據發生了變化，或者 *變化的影響範圍有多廣*。**  為了確保 UI 與數據的 **全面同步**，`Default` 變更檢測策略選擇 **自上而下地檢查整個元件樹**。 這種全面檢查的方式確保了即使數據變更並非直接由點擊事件觸發的元件引起，也能夠被偵測到，並更新所有相關元件的視圖，維持 UI 與數據的同步。
 
-    當然，檢查整個元件樹會帶來一定的效能開銷。為了優化效能，Angular 提供了 **OnPush 變更偵測策略**。`OnPush` 策略允許我們更精細地控制變更檢測的範圍，跳過那些數據沒有發生變化的元件節點，從而提升應用程式的效能。
+    當然，檢查整個元件樹會帶來一定的效能開銷。為了優化效能，Angular 提供了 **OnPush 變更偵測策略**。 `OnPush` 策略允許我們更精細地控制變更檢測的範圍，**僅在必要時才檢查元件及其子元件**，從而跳過那些數據沒有發生變化的元件節點，有效提升應用程式的效能。
 
 ## 不同情境下的變更流程：動畫輔助深入解析
 
@@ -485,3 +487,8 @@ Angular Zoneless 代表了 Angular 變更檢測機制的未來發展方向。移
 7. [I reverse-engineered Zones (zone.js) and here is what I’ve found](https://angular.love/i-reverse-engineered-zones-zone-js-and-here-is-what-ive-found) - 深入 Zone 看這裡。
 
 8. [Signals in Angular: deep dive for busy developers](https://angular.love/signals-in-angular-deep-dive-for-busy-developers#Signals%20as%20primitives) - 深入 Signals 看這裡。
+
+
+
+
+

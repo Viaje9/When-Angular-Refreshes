@@ -1,0 +1,7 @@
+{
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "If the modified filenames include README.md, the commit message should start with [skip cicd]."
+    }
+  ]
+}

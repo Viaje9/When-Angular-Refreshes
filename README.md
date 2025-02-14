@@ -166,8 +166,8 @@ Zone.js 的作用，就像是一位默默守護的間諜，它無聲無息地監
 
 為了更形象地理解 Angular 在 Default 策略下的變更偵測流程，讓我們借助一張 GIF 動畫來進行解析：
 
-### (CD01.gif)
 ![](/public/img/CD01.gif)
+⬆️ (CD01.gif)
 
 這張動畫生動地展示了當使用者在 Angular 應用程式中觸發點擊事件後，畫面更新的完整過程。讓我們逐一拆解動畫中的關鍵元素：
 
@@ -224,10 +224,10 @@ Zone.js 的作用，就像是一位默默守護的間諜，它無聲無息地監
 為了更深入地理解不同情境下的變更偵測流程，我們再次借助 GIF 動畫 (CD02.gif, CD03.gif) 進行視覺化解析：
 
 ![](/public/img/CD02.gif)
-<p style="text-align: center;">(CD02.gif)</p>
+⬆️ (CD02.gif)
 
 ![](/public/img/CD03.gif)
-<p style="text-align: center;">(CD03.gif)</p>
+⬆️ (CD03.gif)
 
 *   **`setInterval` 觸發畫面更新的過程 (CD02.gif)：** 這個動畫展示了當使用 `setInterval` 定時更新數據時，變更檢測的觸發流程。你會看到，即使沒有用戶互動事件，`setInterval` 仍然會持續觸發變更檢測，導致整個元件樹被重複檢查。
 
@@ -354,7 +354,7 @@ Angular Signals 的出現，正是 Angular 團隊在變更檢測機制上的一�
 那麼，Signals 是如何改變變更檢測的運作方式的呢？讓我們借助 GIF 動畫 (CD04.gif) 來理解 Signals 理想情況下的變更流程：
 
 ![](/public/img/CD04.gif)
-<p style="text-align: center;">(CD04.gif)</p>
+⬆️ (CD04.gif)
 
 從動畫中可以看出，Signals 的變更檢測流程與傳統的 Default 策略截然不同。Signals 為變更檢測帶來了以下關鍵改變：
 
@@ -371,7 +371,7 @@ Angular Signals 的出現，正是 Angular 團隊在變更檢測機制上的一�
 雖然 Signals 為變更檢測帶來了革命性的改變，但在某些情境下，我們仍然需要考慮到 Angular 舊有的變更偵測規則。例如，當我們透過**點擊事件**來變更 Signals 的值時：
 
 ![](/public/img/CD05.gif)
-<p style="text-align: center;">(CD05.gif)</p>
+⬆️ (CD05.gif)
 
 你會發現，即使使用了 Signals，**「冒泡」行為依然存在**。這是因為在這種情境下，Angular **舊有的變更偵測規則仍然生效**。點擊事件仍然會觸發傳統的 Dirty 標記和冒泡機制，導致整個元件樹被檢查。
 
@@ -392,7 +392,7 @@ Angular Signals 的出現，正是 Angular 團隊在變更檢測機制上的一�
 在 Zoneless Angular 中，變更檢測的流程將會更加簡潔高效：
 
 ![](/public/img/CD06.gif)
-<p style="text-align: center;">(CD06.gif)</p>
+⬆️ (CD06.gif)
 
 在 Zoneless 模式下，**`notify()` 方法將成為觸發變更檢測的關鍵**。那麼，什麼情況下 `notify()` 會被呼叫呢？
 

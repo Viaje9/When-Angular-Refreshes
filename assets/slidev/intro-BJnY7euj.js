@@ -1,0 +1,1 @@
+import{o as t,b as a,e as s,f as o}from"../modules/vue-DfT0uuOf.js";import{u as l}from"./context-BR9ha8ZZ.js";const r={class:"slidev-layout intro"},i={class:"h-full grid"},n={class:"my-auto"},m={__name:"intro",setup(c){return l(),(e,d)=>(t(),a("div",r,[s("div",null,[o(e.$slots,"left")]),s("div",i,[s("div",n,[o(e.$slots,"default")])])]))}};export{m as _};

@@ -650,7 +650,7 @@ export class HomeComponent {
 			<div class="font-bold text-lg">更聰明的 Change Detection</div>
 			<div class="mt-1 text-base">
 				Change Detection 執行時，遇到被標記為 <strong>HasChildViewsToRefresh</strong> 的元件時，<strong
-					class="text-red-500">不會深入檢查其子元件</strong>，而是<strong class="text-red-500">直接跳過</strong>。只有遇到 <strong>Consumer Dirty</strong> 的元件時，才會進行更新。
+					class="text-red-500">不會檢查該元件</strong>，而是<strong class="text-red-500">直接跳過並找有被標記為 HasChildViewsToRefresh 的元件</strong>。直到遇到 <strong>Consumer Dirty</strong> 的元件時，才會進行更新。
 			</div>
 		</li>
 		<li class="mb-4">
@@ -971,8 +971,24 @@ bootstrapApplication(AppComponent, appConfig)
 			<a target="_blank" href="https://angular.love/signals-in-angular-deep-dive-for-busy-developers#Signals%20as%20primitives"
 				class="text-blue-500">Signals in Angular: deep dive for busy developers</a>
 			<span> - 深入 Signals 看這裡。</span>
-		</li>
+    </li>
 	</ol>
 </div>
 
+---
+layout: intro
+---
 
+<div class="pb-25">
+	<h1>Q & A</h1>
+</div>
+
+---
+layout: intro
+---
+
+<div class="pb-25">
+  <a target="_blank" href="https://github.com/Viaje9/When-Angular-Refreshes/blob/main/README.md" class="text-blue-500 text-5xl">
+    文章好讀版
+  </a>
+</div>

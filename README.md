@@ -228,10 +228,10 @@ Zone.js 的作用，就像是一位默默守護的間諜，它無聲無息地監
 ![](/public/img/CD02.gif)
 ⬆️ (CD02.gif)
 
+*   **`setInterval` 觸發畫面更新的過程 (CD02.gif)：** 這個動畫展示了當使用 `setInterval` 定時更新數據時，變更檢測的觸發流程。你會看到，即使沒有用戶互動事件，`setInterval` 仍然會持續觸發變更檢測，導致整個元件樹被重複檢查。
+
 ![](/public/img/CD03.gif)
 ⬆️ (CD03.gif)
-
-*   **`setInterval` 觸發畫面更新的過程 (CD02.gif)：** 這個動畫展示了當使用 `setInterval` 定時更新數據時，變更檢測的觸發流程。你會看到，即使沒有用戶互動事件，`setInterval` 仍然會持續觸發變更檢測，導致整個元件樹被重複檢查。
 
 *   **使用 `OnPush` 時點擊事件觸發畫面更新的過程 (CD03.gif)：** 這個動畫展示了當元件使用 `OnPush` 策略時，點擊事件觸發的變更流程。你會發現，在 `OnPush` 策略下，只有被標記為 Dirty 的元件及其父元件才會被檢查，變更檢測的範圍大大縮小，效能也得到了提升。
 
@@ -281,7 +281,9 @@ Zone.js 和 NgZone 雖然密切相關，但在細節上還是存在一些區別�
 
 NgZone 正是利用了 `onMicrotaskEmpty` 事件，來**判斷何時觸發 Angular 的變更檢測**。當 NgZone 監聽到 `onMicrotaskEmpty` 事件時，就表示當前事件循環週期中的所有非同步任務 (包括 MacroTask 和 Microtask) 都已處理完畢，此時應用程式的狀態可能發生了變化，需要進行變更檢測，更新畫面。
 
-讓我們再次回到程式碼，看看 `ApplicationRef` (Angular 應用程式的根服務) 是如何利用 `onMicrotaskEmpty` 事件觸發變更檢測的：
+讓我們再次回到程式碼，看看 `ApplicationRef` (Angular 應用程式的根服務) 是如何利用 [`onMicrotaskEmpty`](https://github.com/angular/angular/blob/15.2.10/packages/core/src/application_ref.ts#L782) 事件觸發變更檢測的：
+
+> [`onMicrotaskEmpty`](https://github.com/angular/angular/blob/15.2.10/packages/core/src/application_ref.ts#L782) 不同版本原始碼位置可能不同，此版本為 15.2.10
 
 ```ts
 export class ApplicationRef {
@@ -294,6 +296,7 @@ export class ApplicationRef {
       },
     });
   }
+  ...
 }
 ```
 
@@ -304,10 +307,13 @@ export class ApplicationRef {
 
 ## `ApplicationRef.tick()`：變更檢測的真正觸發點
 
-現在，讓我們繼續深入程式碼，探究 `ApplicationRef.tick()` 方法的內部實現：
+現在，讓我們繼續深入程式碼，探究 [`ApplicationRef.tick()`](https://github.com/angular/angular/blob/15.2.10/packages/core/src/application_ref.ts#L1017) 方法的內部實現：
+
+> [`ApplicationRef.tick`](https://github.com/angular/angular/blob/15.2.10/packages/core/src/application_ref.ts#L1017)不同版本原始碼位置可能不同，此版本為 15.2.10
 
 ```ts
 export class ApplicationRef {
+  ...
   tick(): void {
     try {
       this._runningTick = true;
@@ -321,6 +327,7 @@ export class ApplicationRef {
       }
     } catch (e) { ... } finally { ... }
   }
+  ...
 }
 ```
 
@@ -360,11 +367,12 @@ Angular Signals 的出現，正是 Angular 團隊在變更檢測機制上的一�
 
 從動畫中可以看出，Signals 的變更檢測流程與傳統的 Default 策略截然不同。Signals 為變更檢測帶來了以下關鍵改變：
 
-1.  **Consumer Dirty 標記：** 當 Template 中的 `signal()` 偵測到數值變動時，**Signal 會在內部將自身標記為 Consumer Dirty**。這個標記表示該 Signal 的值已經發生了變化，需要通知相關的元件進行更新。
+1.  **Consumer Dirty 標記：** 當 Template 中的 `signal()` 偵測到數值變動時，**Signal 會將 Consumer 標記為 Dirty**。這個標記表示該 Signal 的值已經發生了變化，需要通知相關的元件進行更新。
+(註：Consumer Dirty 取自[該文章](https://angular.love/the-latest-in-angular-change-detection-zoneless-signals))
 
 2.  **HasChildViewsToRefresh 標記：** 當元件被標記為 **Consumer Dirty** 時，Angular 會呼叫 `markAncestorsForTraversal()` 方法，將其**父元件標記為 HasChildViewsToRefresh**。這種標記機制**類似於傳統 Change Detection 的 Dirty 冒泡**，但更加精細。
 
-3.  **更聰明的 Change Detection：** 當 Change Detection 執行時，遇到被標記為 **HasChildViewsToRefresh** 的元件時，**不會深入檢查其子元件**，而是直接跳過。只有當 Change Detection 遇到被標記為 **Consumer Dirty** 的元件時，才會真正進行更新。這種機制避免了對整個元件樹的無謂檢查，極大地提升了變更檢測的效能。
+3.  **更聰明的 Change Detection：** 當 Change Detection 執行時，遇到被標記為 **HasChildViewsToRefresh** 的元件時，**不會檢查該元件**，而是直接跳過尋找標記有 HasChildViewsToRefresh 的子元件。只有當 Change Detection 遇到被標記為 **Consumer Dirty** 的元件時，才會真正進行更新。這種機制避免了對整個元件樹的無謂檢查，極大地提升了變更檢測的效能。
 
 4.  **擺脫 `NgZone` 的依賴：** Signals 的變更偵測機制**不再需要依賴 NgZone 來通知框架觸發檢查**，而是採用了一種**更直接、更高效**的方式。當 Signal 的值發生變化時，Signal 會主動通知 Angular 框架，觸發必要的更新流程。
 
